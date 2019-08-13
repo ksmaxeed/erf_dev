@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export SCRIPT_DIR1=$(cd $(dirname $0); cd ../../../kails ;pwd)
+export SCRIPT_DIR2=$(cd $(dirname $0); cd ../../../react-app ;pwd)
+
+rm ./kails
+cp ./base_script.txt ./kails
+echo cd $SCRIPT_DIR1 >> ./kails
+echo clear >> ./kails
+chmod 755 ./kails
+
+rm ./kails_ui
+cp ./base_script.txt ./kails_ui
+echo cd $SCRIPT_DIR2 >> ./kails_ui
+echo clear >> ./kails_ui
+chmod 755 ./kails_ui
+
+mkdir -p ~/bin
+cp ./kails ~/bin
+cp ./kails_ui ~/bin

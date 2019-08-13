@@ -1,0 +1,16 @@
+/node_modules
+/*.log
+/log/*.log
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+/build
+/public/assets
+/public/uploads
+/*-compiled.js
+/*-compiled.js.map
+*-compiled.js
+*-compiled.js.map
+/.env.docker
+/.DS_Store
+*.bak

@@ -1,0 +1,41 @@
+{
+  "name": "react-app",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "start": "node server.js",
+    "build": "parcel build index.html"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "axios": "^0.19.0",
+    "babel-preset-nano-react-app": "^0.1.0",
+    "http-proxy-middleware": "^0.19.1",
+    "parcel-bundler": "^1.12.3",
+    "parcel-proxy-server": "^1.1.0"
+  },
+  "babel": {
+    "presets": [
+      "nano-react-app"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ],
+      [
+        "@babel/plugin-transform-react-jsx",
+        {
+          "pragmaFrag": "React.Fragment"
+        }
+      ]
+    ]
+  }
+}
