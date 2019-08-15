@@ -9,12 +9,12 @@ echo cd $SCRIPT_DIR1 >> ./kails
 echo clear >> ./kails
 chmod 755 ./kails
 
-rm ./kails_ui
-cp ./base_script.txt ./kails_ui
-echo cd $SCRIPT_DIR2 >> ./kails_ui
-echo clear >> ./kails_ui
-chmod 755 ./kails_ui
+rm ./reactapp
+cp ./base_script.txt ./reactapp
+echo cd $SCRIPT_DIR2 >> ./reactapp
+echo clear >> ./reactapp
+chmod 755 ./reactapp
 
 mkdir -p ~/bin
 cp ./kails ~/bin
-cp ./kails_ui ~/bin
+cp ./reactapp ~/bin
