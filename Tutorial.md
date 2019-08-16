@@ -98,10 +98,10 @@ MySQL Modelタブを開く。Physical Schemasの部分でデータベース名�
 DatabaseメニューのManage Connectionを選ぶ。New を押し、名前を`my_books`にする。Default Schemeに`my_books`を入れてOKを押す。  
 **（MySQLにmy_booksというデータベースがあることが前提なので作っていなければ  
 `create database my_books;`をしてから）**  
-<img src="./tools/img/mwb_dig01.png" alt="MysqlWorkbench" width="480px" />  
-EER Diagramタブを開く。テーブルを全部削除するが、このとき、「コマンド＋A」で全部選択し、右クリックで「Delete 5 Selected Figure」を選ぶ。単にDeleteキーでは図だけ消えてテーブルモデルは残っている場合がある。
+<img src="./tools/img/mwb_dig01.png" alt="MysqlWorkbench" width="480px" />
 
 ### ユーザーとユーザーブックを作成
+EER Diagramタブを開く。テーブルを全部削除するが、このとき、「コマンド＋A」で全部選択し、右クリックで「Delete 5 Selected Figure」を選ぶ。単にDeleteキーでは図だけ消えてテーブルモデルは残っている場合がある。  
 右のTemplatesからkails_tableをダブルクリックする。できたテーブルをダブルクリックし、テーブル名を`user`に変更する。Columnに`user_name`と`password`を追加し、２つともNotNullにチェックを入れる。
 `user_name`にはUniqueにチェックを入れる。
 (単にnameなど簡単なカラム名だと予約語に引っかかる可能性があるので注意。)
@@ -244,7 +244,7 @@ export default {
 ```
 必要なルートとその処理を構築しただけです。以後のGUI構築のためにレスポンスの形を多少工夫していますが、非常に簡単なAPIです。RestletクライアントなどHTTPのAPIアクセスを直に行うテストをすれば、コードの期待通り動いていることがわかるはずです。
 
-**APIサーバーの構築は以上です**
+**APIサーバーの構築は以上です**
 
 ## GUIの構築
 この規模のアプリをReactJSでルーティングなどもしっかりと作り込むのは手間で、本ドキュメントの目的から外れるので非常に簡易なSPA（ブラウザのリロードで全てがリセットされるような雑な作りのSPA）として作ります。

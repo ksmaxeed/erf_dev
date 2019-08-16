@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/kails.iml" filepath="$PROJECT_DIR$/kails.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kails.iml" filepath="$PROJECT_DIR$/Kails.iml" />
     </modules>
   </component>
 </project>
