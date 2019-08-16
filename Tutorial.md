@@ -114,10 +114,14 @@ EER Diagramタブを開く。テーブルを全部削除するが、このとき
 
 ### データベースへ反映
 DatabaseメニューのSyncronize modelsを選ぶ。Stored Connectionで`my_books`を選ぶ。
-ダイアログを進めていくと現在のmy_booksデータベースとの差分SQLが表示される。（create tableが２文）
-SQLが表示された所で「Save to File」を押し、`my_books/ER_Diagram/alter_sql/first.sql`へ上書き保存する。その後「Execute」で実行する。
+ダイアログを進めていくと現在のmy_booksデータベースとの差分SQLが表示される（create tableが２文）。  
+
+<img src="./tools/img/mwb_dig02.png" alt="MysqlWorkbench" width="480px" />  
+
+MySQL Workbenchがいつも正しいSQLを出すわけではない（修正の内容によってはdrop tableを出力することさえある）のでSQLは毎回目視確認する。
+SQLが良ければ「Save to File」を押し、`my_books/ER_Diagram/alter_sql/first.sql`へ上書き保存する。その後「Execute」で実行する。
 コマンド＋Sを押してER_Diagram.mwbも保存する。
-（first.sqlへ保存するのは本番環境を構築する際に必要になるから）
+（first.sqlへ保存するのは本番環境を構築する際に必要になるからで、チュートリアルの中ではもう使わない。）
 
 **データベースの構築は以上です**
 
@@ -132,7 +136,7 @@ SQLが表示された所で「Save to File」を押し、`my_books/ER_Diagram/al
 ```
 になる。
 ```
-npm run db:models
+yarn db:models
 ```
 を実行すると`my_books`に対応した新しいモデルクラスが生成される。
 
@@ -141,9 +145,11 @@ npm run db:models
 ```
 yarn start
 ```
-を実行し、開発を開始する。  
+を実行し、開発を開始する。 
+（NodeJSのコーディング詳細は本ドキュメントの目的から外れるので省略します。写経をしても良いしコピペでも良いです）  
+
 要件を満たすために`/Kails/app/routes/userList.js`を以下のように変更する。  
-（NodeJSのコーディング詳細は本ドキュメントの目的から外れるので省略します。写経をしても良いしコピペでも良いです）
+
 ```Javascript
 import Router from 'koa-router';
 import userList from '../controllers/user';
@@ -160,7 +166,7 @@ router.post('/book/list', userList.listBook);
 module.exports = router;
 ```
 
-`/Kails/app/controllers/user/index.js`を以下のように変更する。
+続いて`/Kails/app/controllers/user/index.js`を以下のように変更する。
 
 ```Javascript
 import models from '../../models';
@@ -193,8 +199,8 @@ export default {
     if (user) {
       ctx.body = await models.user.findByPk(user.id, {
         include: [{
-          model: models.userBook,  // 子テーブルを示す
-          required: false          // true で INNER JOIN (false で OUTER JOIN)
+          model: models.userBook, 
+          required: false
         }]
       });
     } else {
@@ -215,8 +221,8 @@ export default {
 
     ctx.body = await models.user.findByPk(body.userId, {
       include: [{
-        model: models.userBook,  // 子テーブルを示す
-        required: false           // true で INNER JOIN (false で OUTER JOIN)
+        model: models.userBook, 
+        required: false  
       }]
     });
   },
@@ -226,8 +232,8 @@ export default {
     if (body.userId) {
       ctx.body = await models.user.findByPk(body.userId, {
         include: [{
-          model: models.userBook,  // 子テーブルを示す
-          required: false           // true で INNER JOIN (false で OUTER JOIN)
+          model: models.userBook, 
+          required: false  
         }]
       });
     } else {
@@ -242,12 +248,13 @@ export default {
 
 ## GUIの構築
 この規模のアプリをReactJSでルーティングなどもしっかりと作り込むのは手間で、本ドキュメントの目的から外れるので非常に簡易なSPA（ブラウザのリロードで全てがリセットされるような雑な作りのSPA）として作ります。
-写経しても良いしコピペでも良いです。
+写経しても良いしコピペでも良いです。  
+（余談ですがこのコードを上から1行ずつ写経するのはあまり意味がないかもしれません。なぜならこのコードは上から1行ずつ書いてはいないからです。完成済みのコードを、書いた人と同じ思考を辿ってコーディングするには、少なくとも書いた人と似たような順番でコードを書いていく必要があるでしょう。（APIサーバーの方はさらに小さいコードなので上から1行ずつ辿っても問題ないと思います））
 
 上記で作ったAPIサーバーを動かしたまま、
 `my_books/React_app`に移動し、
 ```
-npm start
+yarn start
 ```
 を実行する。
 http://localhost:3001/ をブラウザで開きます。
@@ -422,5 +429,5 @@ UIは非常に簡易ですが、機能は満たしているのが分かるはず
 
 # まとめ
 もしサービスに機能を追加する際は、  
-ER図に変更を加え、`npm run db:models`を行い、APIサーバーを修正し、GUIクライアントを修正する、  
+ER図に変更を加え、`yarn db:models`を行い、APIサーバーを修正し、GUIクライアントを修正する、  
 ということです。気軽に何度でもできることの実感が沸いているでしょうか？
