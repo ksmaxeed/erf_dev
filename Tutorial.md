@@ -12,7 +12,7 @@
   * ユーザー以外も誰でもアクセス可能
 
 
-## 準備（Macを想定）
+## 準備（Macを想定）（MySQLかMariaDB、NodeJSがインストールされていれば省略可能）
 （homebrewなどMacを想定していますが、Linuxでもほぼ変わらないので、適宜読み替えて進めること。）
 ### homebrewのインストール
 （コマンドでbrewが実行できるならこの作業は不要です）  
@@ -93,9 +93,12 @@ brew install yarn
 MySQL Modelタブを開く。Physical Schemasの部分でデータベース名が`monoraiels`になっているので
 `monorails`の文字をダブルクリックし、Schema Nameを`my_books`に変更する。  
 （他はそのまま）  
+<img src="./tools/img/mwb03.png" alt="MysqlWorkbench" width="480px" />  
  
-DatabaseメニューのManage Connectionを選ぶ。New を押し、名前を`my_books`にする。Default Schemeに`my_books`を入れてOKを押す。（MySQLにmy_booksというデータベースを作っているのが必要）
-
+DatabaseメニューのManage Connectionを選ぶ。New を押し、名前を`my_books`にする。Default Schemeに`my_books`を入れてOKを押す。  
+**（MySQLにmy_booksというデータベースがあることが前提なので作っていなければ  
+`create database my_books;`をしてから）**  
+<img src="./tools/img/mwb_dig01.png" alt="MysqlWorkbench" width="480px" />  
 EER Diagramタブを開く。テーブルを全部削除するが、このとき、「コマンド＋A」で全部選択し、右クリックで「Delete 5 Selected Figure」を選ぶ。単にDeleteキーでは図だけ消えてテーブルモデルは残っている場合がある。
 
 ### ユーザーとユーザーブックを作成
@@ -105,15 +108,20 @@ EER Diagramタブを開く。テーブルを全部削除するが、このとき
 
 もう一度右のTemplatesからkails_tableをダブルクリックする。図上で重ならないように配置し、同じようにテーブル名を`user_book`にして、カラムに`book_name`と`buy_date`を追加する。`buy_date`の型は`DATE`にしておく。
 
-2つの間にリレーションを設定する。左のツールバーから点線の1:nのボタンを押し、user_bookのテーブルを１度クリック、そのまますぐuserテーブルをクリックする。ドラッグアンドドロップではないので独特な操作感だが、難しくはないはず。カーソルが変わるのを確認しながら操作する。（図の見た目は以下）
+2つの間にリレーションを設定する。左のツールバーから点線の1:nのボタンを押し、user_bookのテーブルを１度クリック、そのまますぐuserテーブルをクリックする。ドラッグアンドドロップではないので独特な操作感だが、難しくはないはず。カーソルが変わるのを確認しながら操作する。（最終的なER図の見た目は以下）
+<img src="./tools/img/mwb02.png" alt="MysqlWorkbench" width="480px" />  
 （created_atやupdated_atのカラムを下端に持っていくなど自由にやってよい）
 
 ### データベースへ反映
 DatabaseメニューのSyncronize modelsを選ぶ。Stored Connectionで`my_books`を選ぶ。
-ダイアログを進めていくと現在のmy_booksデータベースとの差分SQLが表示される。（create tableが２文）
-SQLが表示された所で「Save to File」を押し、`my_books/ER_Diagram/alter_sql/first.sql`へ上書き保存する。その後「Execute」で実行する。
+ダイアログを進めていくと現在のmy_booksデータベースとの差分SQLが表示される（create tableが２文）。  
+
+<img src="./tools/img/mwb_dig02.png" alt="MysqlWorkbench" width="480px" />  
+
+MySQL Workbenchがいつも正しいSQLを出すわけではない（修正の内容によってはdrop tableを出力することさえある）のでSQLは毎回目視確認する。
+SQLが良ければ「Save to File」を押し、`my_books/ER_Diagram/alter_sql/first.sql`へ上書き保存する。その後「Execute」で実行する。
 コマンド＋Sを押してER_Diagram.mwbも保存する。
-（first.sqlへ保存するのは本番環境を構築する際に必要になるから）
+（first.sqlへ保存するのは本番環境を構築する際に必要になるからで、チュートリアルの中ではもう使わない。）
 
 **データベースの構築は以上です**
 
@@ -128,7 +136,7 @@ SQLが表示された所で「Save to File」を押し、`my_books/ER_Diagram/al
 ```
 になる。
 ```
-npm run db:models
+yarn db:models
 ```
 を実行すると`my_books`に対応した新しいモデルクラスが生成される。
 
@@ -137,9 +145,11 @@ npm run db:models
 ```
 yarn start
 ```
-を実行し、開発を開始する。  
+を実行し、開発を開始する。 
+（NodeJSのコーディング詳細は本ドキュメントの目的から外れるので省略します。写経をしても良いしコピペでも良いです）  
+
 要件を満たすために`/Kails/app/routes/userList.js`を以下のように変更する。  
-（NodeJSのコーディング詳細は本ドキュメントの目的から外れるので省略します。写経をしても良いしコピペでも良いです）
+
 ```Javascript
 import Router from 'koa-router';
 import userList from '../controllers/user';
@@ -156,7 +166,7 @@ router.post('/book/list', userList.listBook);
 module.exports = router;
 ```
 
-`/Kails/app/controllers/user/index.js`を以下のように変更する。
+続いて`/Kails/app/controllers/user/index.js`を以下のように変更する。
 
 ```Javascript
 import models from '../../models';
@@ -189,8 +199,8 @@ export default {
     if (user) {
       ctx.body = await models.user.findByPk(user.id, {
         include: [{
-          model: models.userBook,  // 子テーブルを示す
-          required: false          // true で INNER JOIN (false で OUTER JOIN)
+          model: models.userBook, 
+          required: false
         }]
       });
     } else {
@@ -211,8 +221,8 @@ export default {
 
     ctx.body = await models.user.findByPk(body.userId, {
       include: [{
-        model: models.userBook,  // 子テーブルを示す
-        required: false           // true で INNER JOIN (false で OUTER JOIN)
+        model: models.userBook, 
+        required: false  
       }]
     });
   },
@@ -222,8 +232,8 @@ export default {
     if (body.userId) {
       ctx.body = await models.user.findByPk(body.userId, {
         include: [{
-          model: models.userBook,  // 子テーブルを示す
-          required: false           // true で INNER JOIN (false で OUTER JOIN)
+          model: models.userBook, 
+          required: false  
         }]
       });
     } else {
@@ -238,12 +248,13 @@ export default {
 
 ## GUIの構築
 この規模のアプリをReactJSでルーティングなどもしっかりと作り込むのは手間で、本ドキュメントの目的から外れるので非常に簡易なSPA（ブラウザのリロードで全てがリセットされるような雑な作りのSPA）として作ります。
-写経しても良いしコピペでも良いです。
+写経しても良いしコピペでも良いです。  
+（余談ですがこのコードを上から1行ずつ写経するのはあまり意味がないかもしれません。なぜならこのコードは上から1行ずつ書いてはいないからです。完成済みのコードを、書いた人と同じ思考を辿ってコーディングするには、少なくとも書いた人と似たような順番でコードを書いていく必要があるでしょう。（APIサーバーの方はさらに小さいコードなので上から1行ずつ辿っても問題ないと思います））
 
 上記で作ったAPIサーバーを動かしたまま、
 `my_books/React_app`に移動し、
 ```
-npm start
+yarn start
 ```
 を実行する。
 http://localhost:3001/ をブラウザで開きます。
@@ -418,5 +429,5 @@ UIは非常に簡易ですが、機能は満たしているのが分かるはず
 
 # まとめ
 もしサービスに機能を追加する際は、  
-ER図に変更を加え、`npm run db:models`を行い、APIサーバーを修正し、GUIクライアントを修正する、  
+ER図に変更を加え、`yarn db:models`を行い、APIサーバーを修正し、GUIクライアントを修正する、  
 ということです。気軽に何度でもできることの実感が沸いているでしょうか？
