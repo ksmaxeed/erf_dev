@@ -12,7 +12,7 @@
   * ユーザー以外も誰でもアクセス可能
 
 
-## 準備（Macを想定）
+## 準備（Macを想定）（MySQLかMariaDB、NodeJSがインストールされていれば省略可能）
 （homebrewなどMacを想定していますが、Linuxでもほぼ変わらないので、適宜読み替えて進めること。）
 ### homebrewのインストール
 （コマンドでbrewが実行できるならこの作業は不要です）  
@@ -93,9 +93,12 @@ brew install yarn
 MySQL Modelタブを開く。Physical Schemasの部分でデータベース名が`monoraiels`になっているので
 `monorails`の文字をダブルクリックし、Schema Nameを`my_books`に変更する。  
 （他はそのまま）  
+<img src="./tools/img/mwb03.png" alt="MysqlWorkbench" width="480px" />  
  
-DatabaseメニューのManage Connectionを選ぶ。New を押し、名前を`my_books`にする。Default Schemeに`my_books`を入れてOKを押す。（MySQLにmy_booksというデータベースを作っているのが必要）
-
+DatabaseメニューのManage Connectionを選ぶ。New を押し、名前を`my_books`にする。Default Schemeに`my_books`を入れてOKを押す。  
+**（MySQLにmy_booksというデータベースがあることが前提なので作っていなければ  
+`create database my_books;`をしてから）**  
+<img src="./tools/img/mwb_dig01.png" alt="MysqlWorkbench" width="480px" />  
 EER Diagramタブを開く。テーブルを全部削除するが、このとき、「コマンド＋A」で全部選択し、右クリックで「Delete 5 Selected Figure」を選ぶ。単にDeleteキーでは図だけ消えてテーブルモデルは残っている場合がある。
 
 ### ユーザーとユーザーブックを作成
@@ -105,7 +108,8 @@ EER Diagramタブを開く。テーブルを全部削除するが、このとき
 
 もう一度右のTemplatesからkails_tableをダブルクリックする。図上で重ならないように配置し、同じようにテーブル名を`user_book`にして、カラムに`book_name`と`buy_date`を追加する。`buy_date`の型は`DATE`にしておく。
 
-2つの間にリレーションを設定する。左のツールバーから点線の1:nのボタンを押し、user_bookのテーブルを１度クリック、そのまますぐuserテーブルをクリックする。ドラッグアンドドロップではないので独特な操作感だが、難しくはないはず。カーソルが変わるのを確認しながら操作する。（図の見た目は以下）
+2つの間にリレーションを設定する。左のツールバーから点線の1:nのボタンを押し、user_bookのテーブルを１度クリック、そのまますぐuserテーブルをクリックする。ドラッグアンドドロップではないので独特な操作感だが、難しくはないはず。カーソルが変わるのを確認しながら操作する。（最終的なER図の見た目は以下）
+<img src="./tools/img/mwb02.png" alt="MysqlWorkbench" width="480px" />  
 （created_atやupdated_atのカラムを下端に持っていくなど自由にやってよい）
 
 ### データベースへ反映
