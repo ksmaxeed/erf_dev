@@ -90,4 +90,16 @@ ER図から始める手法に関する情報を知っていたら教えてくれ
 （つまり、例えばシステム開発を行うためにGoogle検索すると必ずER図先行のアプローチがヒットし、そのための開発フレームワークがいくつもあってどれを使えば良いのか、みたいなTech記事がそこら中に溢れているような世界になれば、当リポジトリのパッションは失われたことになります。上述したような夢のようなビジョンが達成されたと言えないでしょうがその時はまた別のアイデアを別のリポジトリで提供することになるかもしれません。）
 
 ## License
-MIT
+[MIT](./LICENSE)
+
+***
+
+## Appendix
+# How to Automatic generate "sequelize models" with All associations from MySQL Tables.
+I'm looking for tool which can generate sequelize models automatic from already exists MySQL tables.  
+So I found issues below, 
+[https://github.com/sequelize/sequelize-auto/issues/34](https://github.com/sequelize/sequelize-auto/issues/34)
+.
+It's looks like the answer and I tried it.
+But still had not usable all associations of tables. Then I extended some code like this [(./Kails/app/models/index.js)](./Kails/app/models/index.js).
+It's works fine for models and there associations. (But some rules are needed. Table name, Column name, sequelize-auto configurations, etc.  This Repository has template of those.)
