@@ -12,10 +12,12 @@
   * ユーザー以外も誰でもアクセス可能
 
 
-## 準備（Macを想定）（MySQLかMariaDB、NodeJSがインストールされていれば省略可能）
+## 準備（Macを想定）
+**（MySQLかMariaDB、NodeJSがインストールされていれば省略可能）**  
 （homebrewなどMacを想定していますが、Linuxでもほぼ変わらないので、適宜読み替えて進めること。）
+
 ### homebrewのインストール
-（コマンドでbrewが実行できるならこの作業は不要です）  
+**（コマンドでbrewが実行できるならこの作業は不要です）**  
 以下を実行します（1行のコマンドです）。
 ```
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install) " 
@@ -44,24 +46,26 @@ rootユーザのパスワード初期化。(mysqlでログイン後に実行)。
 ```
 set password for root@localhost=password('');
 ```
+my_booksデータベースを作ります。
 ```
 mysql -u root
 (ログイン後)
 create database my_books;
 exit
 ```
-
-**mysql -u root で入れることを確認して下さい（exitでMySQLから出ます）。**  
+**`mysql -uroot my_books` で入れることを確認して下さい（exitでMySQLから出ます）。**  
 
 ### MySQL Workbenchのインストール
 ER図を描くツールとしてMySQL Workbenchを使います。  
 https://www.mysql.com/jp/products/workbench/ からインストールしてください。  
 
 ### プロジェクトフォルダの準備
-erf_devフォルダを`/Users/＜ユーザー名＞/Documents/erf_dev`にコピーし、フォルダ名をプロジェクト名`my_books`に変更します。
+当リポジトリをチェックアウト（あるいはダウンロードなど）しておきます。ダウンロードしたプロジェクトはerf_devフォルダとします。  
+erf_devフォルダを作業フォルダ（`/Users/＜ユーザー名＞/Documents/erf_dev`など作業しやすいフォルダ）にコピーし、フォルダ名を`erf_dev`から`my_books`に変更します。
 
-### 便利コマンドの準備（省略可）
-`~/bin/`をPATHに追加しておきます。ターミナルで`my_books/tools/util-commands/mac`　に移動し、`./install`を実行します。これをするとターミナルで
+### 便利コマンドの準備（省略可能）
+本筋からは離れますが以下を行うとコマンドラインでの移動がスムーズです。  
+`~/bin/`をPATHに追加しておきます（通常は `~/.bash_profile`ファイルで設定します）。ターミナルで`my_books/tools/util-commands/mac` に移動し、`sh ./install`を実行します。これをするとターミナルで
 ```
 . kails
 ```
@@ -69,27 +73,42 @@ erf_devフォルダを`/Users/＜ユーザー名＞/Documents/erf_dev`にコピ�
 ```
 . reactapp
 ```
-で`my_books/React_app/`に移動できるようになります。ドットの後ろにはスペースがあります。 
+で`my_books/React_app/`に移動できるようになります。**ドットの後ろにはスペースがあります。**  
 
 ### Node関係の準備
 ```
 brew install yarn
 ```
-で、yarn および NodeJSのインストールをします。
+を実行して、yarnのインストールをします。NodeJSも同時にインストールされます。
 
-`my_books/Kails/`に移動し、`yarn install`で依存ライブラリをダウンロードします。  
-`yarn start`でAPIサーバーが起動します。  
-`http://localhost:3000/`を開き確認します。  
+#### Kailsの確認
+`my_books/Kails/`に移動し、
+```
+yarn install
+```
+で依存ライブラリをダウンロードします。  
+```
+yarn start
+```
+でAPIサーバーが起動します。`http://localhost:3000/`を開き確認します。 
 
-`my_books/React_app/`に移動し、`yarn install`で依存ライブラリをダウンロードします。  
-`yarn start`でReactGUIサーバーが起動します。  
-`http://localhost:3001/`を開き確認します。
+#### reactappの確認
+`my_books/React_app/`に移動し、
+```
+yarn install
+```
+で依存ライブラリをダウンロードします。  
+```
+yarn start
+```
+でReactGUIサーバーが起動します。`http://localhost:3001/`を開き確認します。
 
 **以上で準備は完了です**
 ***
+ここまででアプリケーション開発の骨組み、基盤ができた状態です。ここからは実際にアプリケーションを作っていく作業です。
 
 ## ER図によるデータベース設計
-`my_books/ER_Diagram/ER_Diagram.mwb`を開く。  
+`my_books/ER_Diagram/ER_Diagram.mwb`を開きます。  
 MySQL Modelタブを開く。Physical Schemasの部分でデータベース名が`monoraiels`になっているので
 `monorails`の文字をダブルクリックし、Schema Nameを`my_books`に変更する。  
 （他はそのまま）  
@@ -97,7 +116,7 @@ MySQL Modelタブを開く。Physical Schemasの部分でデータベース名�
  
 DatabaseメニューのManage Connectionを選ぶ。New を押し、名前を`my_books`にする。Default Schemeに`my_books`を入れてOKを押す。  
 **（MySQLにmy_booksというデータベースがあることが前提なので作っていなければ  
-`create database my_books;`をしてから）**  
+`create database my_books;`をしてから行ってください）**  
 <img src="./tools/img/mwb_dig01.png" alt="MysqlWorkbench" width="480px" />
 
 ### ユーザーとユーザーブックを作成
@@ -124,31 +143,33 @@ SQLが良ければ「Save to File」を押し、`my_books/ER_Diagram/alter_sql/f
 （first.sqlへ保存するのは本番環境を構築する際に必要になるからで、チュートリアルの中ではもう使わない。）
 
 **データベースの構築は以上です**
+***
 
 ## KailsによるAPIサーバー構築
-`my_books/Kails/package.json`を開き、以下の部分ように修正する。
+`my_books/Kails/package.json`を開き、以下の部分のDB名、`monorails`を`my_books`に変えます
+。
 ```
 "sequleise:gen": "sequelize-auto -h localhost -d monorails -u root -p 3306  --dialect mysql -o ./app/models/auto_gen -C  -a ./config/sequelize-auto_additional.json",
 ```
-の`monorails`を`my_books`に変える。
+↓
 ```
 "sequleise:gen": "sequelize-auto -h localhost -d my_books -u root -p 3306  --dialect mysql -o ./app/models/auto_gen -C  -a ./config/sequelize-auto_additional.json",
 ```
-になる。
+とします。
 ```
 yarn db:models
 ```
-を実行すると`my_books`に対応した新しいモデルクラスが生成される。
+を実行すると`my_books`に対応した新しいモデルクラスが生成されます。
 
-また、Kailsの接続先のデータベースの設定も変更する。
-`my_books/Kails/config/database.js`を開き、`monorails`を`my_books`に変える。
+また、Kailsの接続先のデータベースの設定も変更します。
+`my_books/Kails/config/database.js`を開き、`monorails`を`my_books`に変えます。
 ```
 yarn start
 ```
 を実行し、開発を開始する。 
 （NodeJSのコーディング詳細は本ドキュメントの目的から外れるので省略します。写経をしても良いしコピペでも良いです）  
 
-要件を満たすために`/Kails/app/routes/userList.js`を以下のように変更する。  
+要件を満たすために`my_books/Kails/app/routes/userList.js`を以下のように変更する。  
 
 ```Javascript
 import Router from 'koa-router';
@@ -166,7 +187,7 @@ router.post('/book/list', userList.listBook);
 module.exports = router;
 ```
 
-続いて`/Kails/app/controllers/user/index.js`を以下のように変更する。
+続いて`my_books/Kails/app/controllers/user/index.js`を以下のように変更する。
 
 ```Javascript
 import models from '../../models';
@@ -258,7 +279,7 @@ yarn start
 ```
 を実行する。
 http://localhost:3001/ をブラウザで開きます。
-`React-app/src/App.js`を以下のように変更します。
+`my_books/React-app/src/App.js`を以下のように変更します。
 ```Javascript
 import React from "react";
 import axios from "axios";
@@ -426,7 +447,7 @@ export default App;
 UIは非常に簡易ですが、機能は満たしているのが分かるはずです。  
 
 **GUIクライアントの構築は以上です。**
-
+***
 # まとめ
 もしサービスに機能を追加する際は、  
 ER図に変更を加え、`yarn db:models`を行い、APIサーバーを修正し、GUIクライアントを修正する、  
