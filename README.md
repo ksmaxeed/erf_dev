@@ -62,6 +62,10 @@ React-appにはブラウザで動くWebアプリとして最低限のReactアプ
 
 ## 感謝
 ### Kails, KoaJS について  
+[Kailsとは（日本語）](https://blog.kotorel.com/2019/08/kails-an-open-source-project-of-nodejs-similar-to-rails-based-on-koa2.html)
+（[cn](https://www.embbnux.com/2016/09/04/kails_with_koa2_like_ruby_on_rails/)
+[en](https://developpaper.com/kails-an-open-source-project-of-nodejs-similar-to-rails-based-on-koa2/)）
+
 NodeJSでアプリケーションサーバーを構築するにあたって、フレームワークを選定するのは気の滅入る作業です。  
 Railsのようなフォルダ構成が好きなので`Sails`を使おうと思いましたが、大きすぎて自分好みにカスタマイズする方法が分からなかったので諦めました。`AdonisJS`も試しましたが同様にカスタマイズするよりは弄らずそのまま開発を始めるもののように感じました。（これらのフレームワークが悪いと言いたいのではなく、できるだけシンプルなフレームワークを求めていたので用途に合わなかったということです）。  
 KoaJSはシンプルで良さそうでしたがフルスタックフレームワークでないので選択肢に上がっていませんでした。しかしドキュメント内に[Kails](https://github.com/embbnux/kails)というKoaJSを使ったシンプルな構成でRailsライクなフレームワークを実現しているプロジェクトを見つけました。実際ダウンロードして試してみたところ小さくまとまっておりカスタマイズしてみた感触もとても良かったので、非常にマイナーなフレームワークだとは思いつつもこれを使うことにしました。  
